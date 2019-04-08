@@ -7,7 +7,7 @@ Project 1 - Number Guessing Game
 import random
 
 
-def start_game(score):
+def start_game(score, ongoing_game):
     solution = random.randint(1, 10)
     high_score = score
     attempts = 0
@@ -40,25 +40,36 @@ def start_game(score):
             print()
             break
 
-    try:
-        one_more_time = input("\nWould you like to play again? 'YES' or 'NO'? > ")
-        one_more_time = one_more_time.upper()
-        if one_more_time == 'YES' or one_more_time[0] == 'Y':
-            if attempts < high_score:
-                start_game(attempts)
+    while ongoing_game:
+        try:
+            one_more_time = input("\nWould you like to play again? 'YES' or 'NO'? > ")
+            one_more_time = one_more_time.upper()
+            if one_more_time == 'YES' or one_more_time[0] == 'Y':
+                if attempts < high_score:
+                    start_game(attempts, True)
+                    ongoing_game = False
+                else:
+                    start_game(high_score, True)
+                    ongoing_game = False
+            elif one_more_time == 'NO' or one_more_time[0] == 'N':
+                print("\nThanks for playing! Come back soon!\n")
+                ongoing_game = False
             else:
-                start_game(high_score)
-        elif one_more_time == 'NO' or one_more_time[0] == 'N':
-            print("\nThanks for playing! Come back soon!\n")
-        else:
-            raise ValueError
-    except KeyboardInterrupt:
-        print("\n\nBye!\n")
-    except ValueError:
-        print("\nSorry, I didn't understand that. Exiting.")
+                raise ValueError
+        except KeyboardInterrupt:
+            print("\n\nBye!\n")
+            ongoing_game = False
+        except ValueError:
+            print("\nSorry, I didn't understand that. Exiting.")
+            ongoing_game = True
 
 
 if __name__ == '__main__':
-    # Kick off the program by calling the start_game function.
-    # Passing a default high score of 10
-    start_game(10)
+    start_game(10, True)
+
+'''
+ Credit to a user 'Bubbles' on a Programming discord for
+ helping with the second while loop. Originally if several
+ games were played in a row my own while loop would cause
+ it to take several 'NO' responses to exit.
+ '''
